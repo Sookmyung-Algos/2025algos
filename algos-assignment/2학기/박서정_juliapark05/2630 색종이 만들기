@@ -1,0 +1,46 @@
+// 2630 색종이 만들기
+#include <iostream>
+using namespace std;
+
+int board[129][129];
+int white_cnt = 0;
+int blue_cnt = 0;
+
+void divide(int row, int col, int size) {
+    bool need_cut = false;
+    int base_color = board[row][col];
+    for (int i = row; i < row + size; i++) {
+        for (int j = col; j < col + size; j++) {
+            if (board[i][j] != base_color) {
+                need_cut = true;
+                break;
+            }
+        }
+        if (need_cut) break;
+    }
+
+    if (need_cut) {
+        int half = size / 2;
+        divide(row, col, half);
+        divide(row, col + half, half);
+        divide(row + half, col, half);
+        divide(row + half, col + half, half);
+    } else {
+        if (base_color == 1) blue_cnt++;
+        else white_cnt++;
+    }
+}
+
+int main() {
+    int n_size;
+    cin >> n_size;
+    for (int i = 0; i < n_size; i++) {
+        for (int j = 0; j < n_size; j++) {
+            cin >> board[i][j];
+        }
+    }
+    divide(0, 0, n_size);
+    cout << white_cnt << '\n';
+    cout << blue_cnt << '\n';
+    return 0;
+}

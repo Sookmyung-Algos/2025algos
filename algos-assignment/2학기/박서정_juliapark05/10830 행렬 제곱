@@ -1,0 +1,55 @@
+// 10830 행렬 제곱
+#include <iostream>
+#include <vector>
+using namespace std;
+
+using Mat = vector<vector<int>>;
+const int MOD = 1000;
+
+Mat mul(const Mat& A, const Mat& B) {
+    int n = (int)A.size(), m = (int)B[0].size(), p = (int)B.size();
+    Mat C(n, vector<int>(m, 0));
+    for (int i = 0; i < n; ++i)
+        for (int k = 0; k < p; ++k) {
+            int aik = A[i][k];
+            for (int j = 0; j < m; ++j)
+                C[i][j] = (C[i][j] + aik * B[k][j]) % MOD;
+        }
+    return C;
+}
+
+Mat pow_mat(Mat base, long long e) {
+    int n = (int)base.size();
+    Mat res(n, vector<int>(n, 0));
+    for (int i = 0; i < n; ++i) res[i][i] = 1;
+    while (e > 0) {
+        if (e & 1) res = mul(res, base);
+        base = mul(base, base);
+        e >>= 1;
+    }
+    return res;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N; long long B;
+    cin >> N >> B;
+    Mat A(N, vector<int>(N));
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j) {
+            int x; cin >> x;
+            A[i][j] = x % MOD;
+        }
+
+    Mat R = pow_mat(A, B);
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (j) cout << ' ';
+            cout << R[i][j] % MOD;
+        }
+        cout << '\n';
+    }
+    return 0;
+}

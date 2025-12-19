@@ -1,0 +1,40 @@
+// 1780 종이의 개수
+#include <iostream>
+using namespace std;
+
+int n;
+int a[2200][2200];
+long long cntNeg = 0, cntZero = 0, cntPos = 0;
+
+bool same(int x, int y, int sz) {
+    int v = a[x][y];
+    for (int i = x; i < x + sz; ++i)
+        for (int j = y; j < y + sz; ++j)
+            if (a[i][j] != v) return false;
+    return true;
+}
+
+void solve(int x, int y, int sz) {
+    if (same(x, y, sz)) {
+        if (a[x][y] == -1) ++cntNeg;
+        else if (a[x][y] == 0) ++cntZero;
+        else ++cntPos;
+        return;
+    }
+    int t = sz / 3;
+    for (int dx = 0; dx < 3; ++dx)
+        for (int dy = 0; dy < 3; ++dy)
+            solve(x + dx * t, y + dy * t, t);
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin >> n;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+            cin >> a[i][j];
+    solve(0, 0, n);
+    cout << cntNeg << '\n' << cntZero << '\n' << cntPos << '\n';
+    return 0;
+}

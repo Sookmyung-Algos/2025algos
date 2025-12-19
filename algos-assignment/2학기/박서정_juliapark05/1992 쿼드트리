@@ -1,0 +1,40 @@
+// 1992 쿼드트리
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int n;
+vector<string> g;
+
+bool same(int x, int y, int sz) {
+    char v = g[x][y];
+    for (int i = x; i < x + sz; ++i)
+        for (int j = y; j < y + sz; ++j)
+            if (g[i][j] != v) return false;
+    return true;
+}
+
+void quad(int x, int y, int sz) {
+    if (same(x, y, sz)) {
+        cout << g[x][y];
+        return;
+    }
+    int h = sz / 2;
+    cout << '(';
+    quad(x, y, h);
+    quad(x, y + h, h);
+    quad(x + h, y, h);
+    quad(x + h, y + h, h);
+    cout << ')';
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin >> n;
+    g.resize(n);
+    for (int i = 0; i < n; ++i) cin >> g[i];
+    quad(0, 0, n);
+    return 0;
+}
