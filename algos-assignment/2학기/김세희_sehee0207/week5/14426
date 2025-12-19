@@ -1,0 +1,87 @@
+#include <iostream>
+
+using namespace std;
+
+int n, m;
+string s;
+int result;
+
+struct Trie {
+    Trie* ch[26];
+    bool end;
+
+    Trie() {
+        end = false;
+        for (int i = 0; i < 26; i++) {
+            ch[i] = NULL;
+        }
+    }
+
+    ~Trie() {
+        for (int i = 0; i < 26; i++) {
+            if (ch[i] != NULL) {
+                delete ch[i];
+            }
+        }
+    }
+
+    void insert(const char* s) {
+        // 끝에 도달
+        if (*s == 0) {
+            this->end = true;
+            return;
+        }
+
+        int now = *s - 'a';
+
+        if (ch[now] == NULL)
+            ch[now] = new Trie;
+
+        ch[now]->insert(s + 1);
+    }
+
+    bool find(const char* s) {
+        if (*s == 0) {
+            return true;
+        }
+
+        int now = *s - 'a';
+
+        if (ch[now] == NULL)
+            return false;
+
+        return ch[now]->find(s + 1);
+    }
+};
+
+void init(Trie* trie)
+{
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) {
+        cin >> s;
+        trie->insert(s.c_str());
+    }
+    result = 0;
+}
+
+void calc(Trie* trie)
+{
+    for (int i = 0; i < m; i++) {
+        cin >> s;
+        if (trie->find(s.c_str()))
+            result++;
+    }
+
+    cout << result;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    Trie* root = new Trie;
+    init(root);
+    calc(root);
+}
